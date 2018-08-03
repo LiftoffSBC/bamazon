@@ -27,8 +27,7 @@ This was a school assignment to create an Amazon-like storefront with MySQL. The
 
 ## Here is a screenshot of the output: 
 
-![Output Image](/images/Screen Shot 2018-08-02 at 10.40.20 PM.png)
-Format: ![Alt Text](url)
+![Output](/images/output.png)
 
 
 
