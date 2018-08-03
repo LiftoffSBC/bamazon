@@ -1,91 +1,92 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+require("console.table");
 
 var connection = mysql.createConnection({
   host: "localhost",
-  // Your port; if not 3306
   socketPath: "/Applications/MAMP/tmp/mysql/mysql.sock",
-  // Your username
   user: "root",
-  // Your password
   password: "root",
   database: "bamazonDB"
 });
 
 connection.connect(function (err) {
   if (err) throw err;
-  runSearch();
+  productLoad();
 });
+function productLoad() {
+  var queryString = "SELECT * FROM products";
+  connection.query(queryString, function (error, results, fields) {
+    if (error) throw error;
+    console.log("---------------------------------")
+    console.log('Here is what you can choose from:');
+    console.log("---------------------------------")
+    console.table(results);
+    askUser();
+  });
+}
 
-function runSearch() {
-  inquirer.prompt({
-    name: "item",
-    type: "list",
-    message: "Enter Item ID",
-    choices: [
-      "1 for widget",
-      "2 for thing",
-      "3 for animal",
-      "4 for gizmo",
-      "5 for coke",
-      "6 for pepsi",
-      "7 for sprite",
-      "8 for water",
-      "9 for shirt",
-      "10 for pants"
-    ]
-  })
+//Prompt user for what they would like to buy and how many
+function askUser() {
+  inquirer.prompt([
+    {
+      name: "item",
+      type: "input",
+      message: "Enter Item ID",
+    },
+    {
+      name: "quantity",
+      type: "input",
+      message: "How many would you like to buy?",
+
+    }]
+  )
     .then(function (answer) {
-      var id = getIdFromChoice(answer.item)
-      inquirer.prompt({
-        name: "quantity",
-        type: "number",
-        message: "How many would you like to buy?",
-      })
-        .then(function (answers) {
-          var qty = getQtyFromChoice(answers.quantity)
-          console.log(qty)
-        })
-
-      productSearch(id)
+      productSearch(answer.item, answer.quantity);
     });
 }
 
-function getIdFromChoice(choice) {
-  // console.log(choice)
-  var id = choice[0]
-  // console.log(id)
-  if (choice.includes("10")) {
-    id += choices[1]
-  }
-  return parseInt(id)
-}
-
-function getQtyFromChoice() {
-  // what do i put in type??
-  var qty = type()
-  console.log(qty)
-  if (qty > id.stock_quantity) {
-    console.log("Not enough in stock, pick a different item.");
-    runSearch();
-  }
-  else {
-    buyChoice(id, qty);
-  }
-  //buy function
-}
+//Update stock qty
 function buyChoice(id, qty) {
-  var qtyString = "UPDATE products SET stock_quantity = stock_quantity - " + qty + "WHERE item_id = " + id;
-  connection.query(qtyString, function (error, results, fields) {
+  var qtyString = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE item_id = ?";
+  connection.query(qtyString, [qty, id], function (error, results, fields) {
     if (error) throw error;
   });
 }
-// prod function
-function productSearch(productId) {
+
+//Check to see if enough in stock
+//If so purchase and total - if not prompt for another item.
+function productSearch(productId, qtyId) {
   var queryString = "SELECT * FROM products WHERE item_id = " + productId;
   connection.query(queryString, function (error, results, fields) {
     if (error) throw error;
-    // console.log('The solution is: ', results[0]);
-  });
-  // total price function 
+
+    if (qtyId > results[0].stock_quantity) {
+      console.log("Not enough in stock, pick a different item.");
+      askUser();
+    }
+    else {
+      buyChoice(productId, qtyId);
+      console.log("Awesome, your total is: $" + results[0].price * qtyId);
+      inquirer.prompt([
+        {
+          type: "confirm",
+          message: "Would you like to shop again?",
+          name: "confirm",
+          // default: true
+        },
+      ])
+      //code to restart after prompt
+      .then(function(shopAgain) {
+        switch(shopAgain.confirm) {
+          case true:
+          productLoad();
+          break;
+          case false:
+          console.log("Thanks for shopping Bamazon!");
+          break;
+        }
+      })
+    }
+  }); 
 }
