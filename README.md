@@ -2,7 +2,7 @@
 
 This was a school assignment to create an Amazon-like storefront with MySQL. The app takes in orders from customers and depletes stock from the store's inventory.
 
-##Here is how it works:##
+## Here is how it works:
 
 1. Running this application will first display all of the items available for sale. Include the ids, names, and prices of products for sale.
 
@@ -21,15 +21,13 @@ This was a school assignment to create an Amazon-like storefront with MySQL. The
 
 6. The customer is then asked if they would like to shop again, which prompts the app to run again, or quit.
 
-##Here is a link to a video of the app in action:##
+## Here is a video of the app in action: 
 
-[https://youtu.be/qevBmGEqe2A "YouTube Video"]
+[![YouTube Video](http://img.youtube.com/vi/qevBmGEqe2A/0.jpg)](http://www.youtube.com/watch?v=qevBmGEqe2A)
 
-[![YouTube Video](http://img.youtube.com/vi/qevBmGEqe2A/0.jpg)](http://www.youtube.com/watch?v=YOUTUBE_qevBmGEqe2A)
+## Here is a screenshot of the output: 
 
-##Here is a screenshot of the output:##
-
-![Output Image](/Users/libbygillette/Desktop/BootCamp/Homework/hw9/bamazon/screenshots/Screen Shot 2018-08-02 at 10.40.20 PM.png "Output Image")
+![Output Image](/screenshots/Screen Shot 2018-08-02 at 10.40.20 PM.png)
 
 
 
